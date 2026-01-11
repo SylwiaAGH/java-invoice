@@ -34,10 +34,20 @@ public class Invoice {
     }
 
     public BigDecimal getTax() {
-        return BigDecimal.ZERO;
+
+            return getGrossValue().subtract(getNetValue());
     }
 
     public BigDecimal getGrossValue() {
-        return BigDecimal.ZERO;
+            BigDecimal value =BigDecimal.ZERO;
+            for (Product product : this.products.keySet()) {
+                Integer quantity = this.products.get(product);
+                BigDecimal price = product.getPriceWithTax();
+                price = price.multiply(BigDecimal.valueOf(quantity));
+                value= value.add(price);
+            }
+
+            return value;
+
     }
 }
