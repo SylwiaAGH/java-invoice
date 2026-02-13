@@ -14,11 +14,19 @@ public class Invoice {
             new HashMap<>();
 
     public void addProduct(Product product) {
-       this.addProduct(product, 1);
+       if(product == null){
+           throw new IllegalArgumentException("Wartość produkt nie może być null-em");
+       }
+
+        this.addProduct(product, 1);
     }
 
     public void addProduct(Product product, Integer quantity) {
-      this.products.put(product, quantity);
+        if(quantity == 0 || quantity <= 0){
+            throw new IllegalArgumentException("Ilość nie może być równa zero lub mniejsza niż zero");
+        }
+
+        this.products.put(product, quantity);
     }
 
     public BigDecimal getNetValue() {
