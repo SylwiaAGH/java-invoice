@@ -143,6 +143,26 @@ public class InvoiceTest {
     @Test
     public void testInvoiceStartsWithNumber() {
         String printout = invoice.getPrintout();
-        Assert.assertThat(printout, Matchers.startsWith("Faktura numer: " + invoice.getNumber()));
+        Assert.assertThat(printout, Matchers.startsWith("Faktura nr: " + invoice.getNumber()));
+    }
+
+    @Test
+    public void testAddingSameProductTwiceIncreasesQuantityAndNoDuplication() {
+        Product maslo = new TaxFreeProduct("Masło", new BigDecimal("8"));
+        invoice.addProduct(maslo);
+        invoice.addProduct(maslo);
+
+        Assert.assertThat(new BigDecimal("16"), Matchers.comparesEqualTo(invoice.getNetValue()));
+        Assert.assertThat(invoice.getPrintout(), Matchers.containsString("Lp: 1"));
+    }
+
+    @Test
+    public void testAddingSameProductWithDifferentQuantitiesAccumulates() {
+        Product maslo = new TaxFreeProduct("Masło", new BigDecimal("5"));
+        invoice.addProduct(maslo, 2);
+        invoice.addProduct(maslo, 3);
+
+        Assert.assertThat(new BigDecimal("25"), Matchers.comparesEqualTo(invoice.getNetValue()));
+        Assert.assertThat(invoice.getPrintout(), Matchers.containsString("Lp: 1"));
     }
 }

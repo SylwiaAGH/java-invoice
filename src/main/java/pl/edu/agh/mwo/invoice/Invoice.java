@@ -50,11 +50,16 @@ public class Invoice {
     }
 
     public void addProduct(Product product, Integer quantity) {
-        if (quantity == 0 || quantity <= 0) {
+        if (product == null) {
+            throw new IllegalArgumentException("Wartość produkt nie może być null-em");
+        }
+        if (quantity == null || quantity <= 0) {
             throw new IllegalArgumentException("Ilość nie może być równa lub mniejsza niż 0");
         }
 
-        this.products.put(product, quantity);
+        Integer existingQuantity = this.products.get(product);
+        int newQuantity = (existingQuantity == null ? 0 : existingQuantity) + quantity;
+        this.products.put(product, newQuantity);
     }
 
     public BigDecimal getNetValue() {
