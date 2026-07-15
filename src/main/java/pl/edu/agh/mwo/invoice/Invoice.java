@@ -1,17 +1,45 @@
 package pl.edu.agh.mwo.invoice;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import pl.edu.agh.mwo.invoice.product.Product;
 
 public class Invoice {
 
-    private Map<Product, Integer> products =
-            new HashMap<>();
+    private static int nextNumber = 1;
+
+    private final int number;
+
+    private Map<Product, Integer> products = new LinkedHashMap<Product, Integer>();
+
+    public Invoice() {
+        this.number = nextNumber++;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public String getPrintout() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Faktura nr: ").append(this.number).append("\n");
+
+        for (Map.Entry<Product, Integer> entry : this.products.entrySet()) {
+            Product product = entry.getKey();
+            Integer quantity = entry.getValue();
+            builder.append(product.getName())
+                    .append(", ")
+                    .append(quantity)
+                    .append(", ")
+                    .append(product.getPrice())
+                    .append("\n");
+        }
+        builder.append("Lp: ").append(this.products.size());
+        return builder.toString();
+
+    }
 
     public void addProduct(Product product) {
         if (product == null) {
